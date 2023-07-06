@@ -128,6 +128,7 @@ public class MergedPanel extends JPanel {
 	}
 
 	private void addRatiosAsCrops(List<float[]> ratiosList) {
+		System.out.println("Running addRatiosAsCrops");
 		for (float[] ratios : cluster.getRatiosList()) {
 			int x = (int) (img.getWidth() * ratios[0]);
 			int y = (int) (img.getHeight() * ratios[3]);

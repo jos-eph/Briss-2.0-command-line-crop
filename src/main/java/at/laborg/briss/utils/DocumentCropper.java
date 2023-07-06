@@ -120,7 +120,8 @@ public final class DocumentCropper {
 
 	private static void cropMultipliedFile(final CropDefinition cropDefinition, final File multipliedDocument,
 			final PdfMetaInformation pdfMetaInformation, String password) throws DocumentException, IOException {
-
+		
+		System.out.println("cropMultipliedFile running");
 		PdfReader reader = PDFReaderUtil.getPdfReader(multipliedDocument.getAbsolutePath(), password);
 
 		PdfStamper stamper = new PdfStamper(reader, new FileOutputStream(cropDefinition.getDestinationFile()));
@@ -141,6 +142,11 @@ public final class DocumentCropper {
 			}
 
 			for (float[] ratios : rectangleList) {
+				System.out.format("printing rectangle list for sourcePageNumber %d\n",sourcePageNumber);
+				for (float ratio: ratios) {
+					System.out.format("Ratio: %f\n", ratio);
+				}
+				System.out.println();
 
 				pageDict = reader.getPageN(newPageNumber);
 
@@ -150,7 +156,7 @@ public final class DocumentCropper {
 				int rotation = reader.getPageRotation(newPageNumber);
 
 				Rectangle scaledBox = RectangleHandler.calculateScaledRectangle(boxes, ratios, rotation);
-
+			
 				PdfArray scaleBoxArray = createScaledBoxArray(scaledBox);
 
 				pageDict.put(PdfName.CROPBOX, scaleBoxArray);
