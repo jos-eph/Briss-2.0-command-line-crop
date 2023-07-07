@@ -118,9 +118,10 @@ public final class DocumentCropper {
 		return resultFile;
 	}
 
+	// this method is operating on an object, not returning it
 	private static void cropMultipliedFile(final CropDefinition cropDefinition, final File multipliedDocument,
 			final PdfMetaInformation pdfMetaInformation, String password) throws DocumentException, IOException {
-		
+
 		System.out.println("cropMultipliedFile running");
 		PdfReader reader = PDFReaderUtil.getPdfReader(multipliedDocument.getAbsolutePath(), password);
 
@@ -142,8 +143,8 @@ public final class DocumentCropper {
 			}
 
 			for (float[] ratios : rectangleList) {
-				System.out.format("printing rectangle list for sourcePageNumber %d\n",sourcePageNumber);
-				for (float ratio: ratios) {
+				System.out.format("printing rectangle list for sourcePageNumber %d\n", sourcePageNumber);
+				for (float ratio : ratios) {
 					System.out.format("Ratio: %f\n", ratio);
 				}
 				System.out.println();
@@ -155,14 +156,20 @@ public final class DocumentCropper {
 				boxes.add(reader.getBoxSize(newPageNumber, "crop"));
 				int rotation = reader.getPageRotation(newPageNumber);
 
+				System.out.println("This is the method that gives us the dimensions we need");
 				Rectangle scaledBox = RectangleHandler.calculateScaledRectangle(boxes, ratios, rotation);
-			
+
+				// // code should be separated out into a different method
+
 				PdfArray scaleBoxArray = createScaledBoxArray(scaledBox);
 
 				pageDict.put(PdfName.CROPBOX, scaleBoxArray);
 				pageDict.put(PdfName.MEDIABOX, scaleBoxArray);
+
 				// increment the pagenumber
 				newPageNumber++;
+
+				// // end of independent code
 			}
 			int[] range = new int[2];
 			range[0] = newPageNumber - 1;

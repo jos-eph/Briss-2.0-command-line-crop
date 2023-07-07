@@ -41,8 +41,8 @@ public final class RectangleHandler {
 		scaledBox.setRight(smallestBox.getLeft() + (smallestBox.getWidth() * (1 - rotRatios[2])));
 		scaledBox.setTop(smallestBox.getBottom() + (smallestBox.getHeight() * (1 - rotRatios[3])));
 
-		System.out.format("In calculateScaledRectangle, returning %s left %s bottom %s right %s top",scaledBox.getLeft(),
-			scaledBox.getBottom(), scaledBox.getRight(), scaledBox.getTop());
+		System.out.format("In calculateScaledRectangle, returning %s left %s bottom %s right %s top",
+				scaledBox.getLeft(), scaledBox.getBottom(), scaledBox.getRight(), scaledBox.getTop());
 		return scaledBox;
 	}
 

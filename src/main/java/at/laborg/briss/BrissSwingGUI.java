@@ -341,7 +341,7 @@ public class BrissSwingGUI implements BrissGUIApp {
 		initFileChooser();
 		fileChooser.setTitle("Open PDF File");
 		fileChooser.setMode(FileDialog.LOAD);
-        fileChooser.setFile("*.pdf");
+		fileChooser.setFile("*.pdf");
 		fileChooser.setVisible(true);
 		String filename = fileChooser.getFile();
 		String directory = fileChooser.getDirectory();
@@ -663,7 +663,7 @@ public class BrissSwingGUI implements BrissGUIApp {
 
 	private void setStateAfterClusteringFinished(ClusterDefinition newClusters, PageExcludes newPageExcludes,
 			File newSource, String password) {
-		
+
 		System.out.println("setStateAfterClusteringFinished running");
 		updateWorkingSet(newClusters, newPageExcludes, newSource, password);
 

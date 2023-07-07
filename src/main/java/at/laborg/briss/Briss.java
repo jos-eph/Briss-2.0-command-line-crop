@@ -17,6 +17,11 @@
  */
 package at.laborg.briss;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.stream.Collectors;
+
 import at.laborg.briss.cli.BrissCMD;
 
 public final class Briss {
@@ -30,10 +35,13 @@ public final class Briss {
 		System.setProperty("org.jpedal.jai", "true");
 		System.setProperty("apple.laf.useScreenMenuBar", "true");
 		// check if args are present, if so try to start commandline briss
+
+		List<String> argsStrings = new ArrayList<String>(Arrays.asList(args));
+		System.out.println(argsStrings); // pipe out a new method to intercept with rectangle numbers
 		if (args.length > 1) {
 			BrissCMD.autoCrop(args);
 		} else {
-			new BrissSwingGUI(args);
+			new BrissSwingGUI(args); // filename only
 		}
 	}
 }
