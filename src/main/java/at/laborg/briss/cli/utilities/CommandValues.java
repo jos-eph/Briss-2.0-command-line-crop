@@ -32,6 +32,7 @@ public class CommandValues {
 
 	public static CommandValues parseToWorkDescription(final String[] args) {
 		System.out.println("Printing args as received");
+		System.out.println("Printing again");
 		for (String arg : args) {
 			System.out.println(arg);
 		}

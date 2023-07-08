@@ -36,9 +36,7 @@ public final class BrissCMD {
 	private BrissCMD() {
 	}
 
-	public static void autoCrop(final String[] args) {
-
-		CommandValues workDescription = CommandValues.parseToWorkDescription(args);
+	public static void autoCrop(CommandValues workDescription) {
 
 		if (!CommandValues.isValidJob(workDescription))
 			return;

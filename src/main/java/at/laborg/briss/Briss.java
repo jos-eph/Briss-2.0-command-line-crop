@@ -41,7 +41,7 @@ public final class Briss {
 		if (args.length > 1) {
 			CommandValues parsedArgs = CommandValues.parseToWorkDescription(args);
 
-			BrissCMD.autoCrop(args);
+			BrissCMD.autoCrop(parsedArgs);
 		} else if (args.length == 1) {
 			new BrissSwingGUI(args[0]); // filename only
 		} else {
