@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 import at.laborg.briss.cli.BrissCMD;
+import at.laborg.briss.cli.utilities.CommandValues;
 
 public final class Briss {
 
@@ -38,6 +39,8 @@ public final class Briss {
 		List<String> argsStrings = new ArrayList<String>(Arrays.asList(args));
 		System.out.println(argsStrings); // pipe out a new method to intercept with rectangle numbers
 		if (args.length > 1) {
+			CommandValues parsedArgs = CommandValues.parseToWorkDescription(args);
+
 			BrissCMD.autoCrop(args);
 		} else if (args.length == 1) {
 			new BrissSwingGUI(args[0]); // filename only

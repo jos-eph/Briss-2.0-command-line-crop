@@ -6,14 +6,21 @@ import java.io.IOException;
 import at.laborg.briss.utils.BrissFileHandling;
 
 public class CommandValues {
+	private CommandValues() {
+	}
 
 	private static final String SOURCE_FILE_CMD = "-s";
 	private static final String DEST_FILE_CMD = "-d";
 
-	private static final String SPLIT_COLUMN_CMD = "--split-col";
-	private static final String SPLIT_ROW_CMD = "--split-row";
+	private static final String SPLIT_COLUMN_CMD = "--split-col"; // ignored for command-line crop
+	private static final String SPLIT_ROW_CMD = "--split-row"; // ignored for command-line crop
 
 	private static final String FILE_PASSWORD_CMD = "-p";
+
+	private static final String ODD_RECTS = "--odd-rects";
+	private static final String EVEN_RECTS = "--even-rects";
+	private static final String RECTS = "--rects";
+	private static final String EXCLUDES = "--excludes";
 
 	private File sourceFile = null;
 	private File destFile = null;
@@ -24,6 +31,11 @@ public class CommandValues {
 	private String password;
 
 	public static CommandValues parseToWorkDescription(final String[] args) {
+		System.out.println("Printing args as received");
+		for (String arg : args) {
+			System.out.println(arg);
+		}
+
 		CommandValues commandValues = new CommandValues();
 		int i = 0;
 		while (i < args.length) {
