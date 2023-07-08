@@ -25,6 +25,7 @@ public class ClusterDefinition {
 	private final List<PageCluster> clusters = new ArrayList<PageCluster>();
 
 	public final PageCluster getSingleCluster(final int pageNumber) {
+		System.out.println("Running getSingleCluster");
 		for (PageCluster cluster : clusters) {
 			if (cluster.getAllPages().contains(pageNumber))
 				return cluster;
@@ -33,10 +34,12 @@ public class ClusterDefinition {
 	}
 
 	public final List<PageCluster> getClusterList() {
+		System.out.println("Running getClusterList");
 		return clusters;
 	}
 
 	public final void addOrMergeCluster(final PageCluster tmpCluster) {
+		System.out.println("running addOrMergeCluster");
 		PageCluster existingCluster = findNearlyEqualCluster(tmpCluster);
 		if (existingCluster != null) {
 			existingCluster.mergeClusters(tmpCluster);

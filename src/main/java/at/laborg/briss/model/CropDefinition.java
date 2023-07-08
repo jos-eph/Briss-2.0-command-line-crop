@@ -40,6 +40,7 @@ public final class CropDefinition {
 
 	public static CropDefinition createCropDefinition(final File source, final File destination,
 			final ClusterDefinition clusters) throws IOException {
+		System.out.println("createCropDefinition running");
 		if (source == null)
 			throw new IllegalArgumentException("Source must be provided");
 		if (!source.exists())
