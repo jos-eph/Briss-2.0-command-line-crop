@@ -20,7 +20,6 @@ package at.laborg.briss;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 import at.laborg.briss.cli.BrissCMD;
 
@@ -40,8 +39,10 @@ public final class Briss {
 		System.out.println(argsStrings); // pipe out a new method to intercept with rectangle numbers
 		if (args.length > 1) {
 			BrissCMD.autoCrop(args);
+		} else if (args.length == 1) {
+			new BrissSwingGUI(args[0]); // filename only
 		} else {
-			new BrissSwingGUI(args); // filename only
+			new BrissSwingGUI(null);
 		}
 	}
 }

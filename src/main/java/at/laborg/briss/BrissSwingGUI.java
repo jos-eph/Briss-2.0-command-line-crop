@@ -136,10 +136,12 @@ public class BrissSwingGUI implements BrissGUIApp {
 	private JButton showPreview;
 	private JButton startCropping;
 
-	public BrissSwingGUI(String[] args) {
+	public BrissSwingGUI(String filepath) {
 		mainWindow = new JFrame(Messages.getString("BrissGUI.windowTitle")); // $NON-NLS-1$
 		init();
-		tryToLoadFileFromArgument(args);
+		if (filepath != null) {
+			tryToLoadFileFromFilepath(filepath);
+		}
 
 		fileChooser = new FileDialog(mainWindow, "Open", FileDialog.LOAD);
 		initFileChooser();
@@ -150,10 +152,8 @@ public class BrissSwingGUI implements BrissGUIApp {
 		fileChooser.setFilenameFilter(((dir, name) -> name.endsWith(".pdf")));
 	}
 
-	private void tryToLoadFileFromArgument(String[] args) {
-		if (args.length == 0)
-			return;
-		File fileArg = new File(args[0]);
+	private void tryToLoadFileFromFilepath(String filepath) {
+		File fileArg = new File(filepath);
 		if (fileArg.exists() && fileArg.getAbsolutePath().trim().endsWith(".pdf")) { // $NON-NLS-1$
 			try {
 				importNewPdfFile(fileArg);
