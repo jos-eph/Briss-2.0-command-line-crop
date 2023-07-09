@@ -12,7 +12,7 @@ import java.nio.file.Paths;
 
 import org.junit.jupiter.api.Test;
 
-public class AutoCropTest {
+class AutoCropTest {
 	private CommandValues toParsedArgs(String[] args) {
 		assertDoesNotThrow(() -> CommandValues.parseToWorkDescription(args));
 		return CommandValues.parseToWorkDescription(args);
