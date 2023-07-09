@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.util.List;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -39,8 +40,9 @@ class CommandValuesTest {
 		}
 	}
 
+	@Test
 	void testExcludesDetected() {
-		String[] inputargs = {"--exclude-pages 1,2,200,300"};
+		String[] inputargs = {"--exclude-pages", "1,2,200,300"};
 		CommandValues parsedArgs = CommandValues.parseToWorkDescription(inputargs);
 
 		List<Integer> expected = List.of(1,2,200,300);

@@ -88,7 +88,7 @@ public class CommandValues {
 				rectDeclaration.rects = rects;
 			} else if (arg.equalsIgnoreCase(EXCLUDE_PAGES)) {
 				if (i < (args.length - 1)) {
-					List<Integer> exclude_pages = IntegerParser.parseIntsFromDelimitedString(arg);
+					List<Integer> exclude_pages = IntegerParser.parseIntsFromDelimitedString(args[i + 1]);
 					commandValues.setExcludePages(exclude_pages);
 				} 
 			}
