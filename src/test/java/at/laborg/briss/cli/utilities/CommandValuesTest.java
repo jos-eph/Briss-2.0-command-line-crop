@@ -45,7 +45,7 @@ class CommandValuesTest {
 		String[] inputargs = {"--exclude-pages", "1,2,200,300"};
 		CommandValues parsedArgs = CommandValues.parseToWorkDescription(inputargs);
 
-		List<Integer> expected = List.of(1,2,200,300);
+		List<Integer> expected = List.of(1, 2, 200, 300);
 		List<Integer> result = parsedArgs.getExcludePages();
 
 		assertEquals(expected, result);
