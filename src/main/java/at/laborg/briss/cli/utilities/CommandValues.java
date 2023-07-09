@@ -2,10 +2,19 @@ package at.laborg.briss.cli.utilities;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 
 import at.laborg.briss.utils.BrissFileHandling;
 
 public class CommandValues {
+
+	private class RectDeclaration {
+		List<Integer> oddRects = Collections.emptyList();
+		List<Integer> evenRects = Collections.emptyList();
+		List<Integer> rects = Collections.emptyList();
+	}
+
 	private CommandValues() {
 	}
 
@@ -20,7 +29,7 @@ public class CommandValues {
 	private static final String ODD_RECTS = "--odd-rects";
 	private static final String EVEN_RECTS = "--even-rects";
 	private static final String RECTS = "--rects";
-	private static final String EXCLUDES = "--excludes";
+	private static final String EXCLUDE_PAGES = "--exclude-pages";
 
 	private File sourceFile = null;
 	private File destFile = null;
@@ -30,6 +39,18 @@ public class CommandValues {
 
 	private String password;
 
+	private RectDeclaration rectDeclaration = new RectDeclaration();
+
+	private List<Integer> excludePages = Collections.emptyList();
+
+	private void setExcludePages(List<Integer> pagesToExclude) {
+		this.excludePages = pagesToExclude;
+	}
+
+	public List<Integer> getExcludePages() {
+		return this.excludePages;
+	}
+
 	public static CommandValues parseToWorkDescription(final String[] args) {
 		System.out.println("Printing args as received");
 		System.out.println("Printing again");
@@ -38,6 +59,7 @@ public class CommandValues {
 		}
 
 		CommandValues commandValues = new CommandValues();
+		RectDeclaration rectDeclaration = commandValues.new RectDeclaration();
 		int i = 0;
 		while (i < args.length) {
 			String arg = args[i].trim();
@@ -55,6 +77,20 @@ public class CommandValues {
 				commandValues.setSplitRows();
 			} else if (arg.equalsIgnoreCase(FILE_PASSWORD_CMD)) {
 				commandValues.password = args[i + 1];
+			} else if (arg.equalsIgnoreCase(ODD_RECTS)) {
+				List<Integer> oddRects = IntegerParser.parseIntsFromDelimitedString(args[i + 1], 4);
+				rectDeclaration.oddRects = oddRects;
+			} else if (arg.equalsIgnoreCase(EVEN_RECTS)) {
+				List<Integer> evenRects = IntegerParser.parseIntsFromDelimitedString(args[i + 1], 4);
+				rectDeclaration.evenRects = evenRects;
+			} else if (arg.equalsIgnoreCase(RECTS)) {
+				List<Integer> rects = IntegerParser.parseIntsFromDelimitedString(args[i + 1], 4);
+				rectDeclaration.rects = rects;
+			} else if (arg.equalsIgnoreCase(EXCLUDE_PAGES)) {
+				if (i < (args.length - 1)) {
+					List<Integer> exclude_pages = IntegerParser.parseIntsFromDelimitedString(args[i + 1]);
+					commandValues.setExcludePages(exclude_pages);
+				} 
 			}
 
 			i++;
@@ -127,4 +163,43 @@ public class CommandValues {
 	public String getPassword() {
 		return password;
 	}
+
+	public Boolean rectangleDeclared() {
+		Boolean separateRectsDeclared = (!rectDeclaration.evenRects.isEmpty() && !rectDeclaration.oddRects.isEmpty());
+		Boolean mainRectsDeclared = !rectDeclaration.rects.isEmpty();
+
+		System.out.format("\nOdd rects, even rects: %s, %s\n", rectDeclaration.oddRects, rectDeclaration.evenRects);
+
+		System.out.format("\nSeparate rects declared, mainRectsDeclared: %s, %s\n", separateRectsDeclared,
+				mainRectsDeclared);
+
+		System.out.format("\nRectangle declared: %s\n", separateRectsDeclared || mainRectsDeclared);
+
+		return separateRectsDeclared || mainRectsDeclared;
+	}
+
+	private Boolean oddEvenRectsFullySpecified() {
+		if (!rectangleDeclared()) {
+			throw new IllegalStateException();
+		}
+
+		return (!rectDeclaration.evenRects.isEmpty() && !rectDeclaration.oddRects.isEmpty());
+	}
+
+	public List<Integer> getEvenRects() {
+		if (!rectangleDeclared()) {
+			throw new IllegalStateException();
+		}
+
+		return oddEvenRectsFullySpecified() ? rectDeclaration.evenRects : rectDeclaration.rects;
+	}
+
+	public List<Integer> getOddRects() {
+		if (!rectangleDeclared()) {
+			throw new IllegalStateException();
+		}
+
+		return oddEvenRectsFullySpecified() ? rectDeclaration.oddRects : rectDeclaration.rects;
+	}
+
 }

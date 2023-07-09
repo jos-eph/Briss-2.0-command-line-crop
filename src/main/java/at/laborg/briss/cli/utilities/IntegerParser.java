@@ -5,7 +5,7 @@ import java.util.List;
 
 public class IntegerParser {
 
-	private static List<Integer> parseIntsFromDelimitedString(String delimitedIntString) {
+	public static List<Integer> parseIntsFromDelimitedString(String delimitedIntString) {
 		String[] stringInts = delimitedIntString.split(",");
 		List<Integer> intList = new ArrayList<>();
 		for (String stringInt : stringInts) {
