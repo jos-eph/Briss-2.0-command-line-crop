@@ -153,6 +153,8 @@ public final class DocumentCropper {
 
 				Rectangle scaledBox = RectangleHandler.calculateScaledRectangle(boxes, ratios, rotation);
 				System.out.println("Rectangle calculated using DocumentCropper path");
+				System.out.format("Rectangle %s for newPageNumber %s, sourcePageNumber %s calculated\n",
+						RectanglePrinter.rectangleToString(scaledBox), newPageNumber, sourcePageNumber);
 
 				// // code should be separated out into a different method
 
