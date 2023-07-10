@@ -293,7 +293,6 @@ public class BrissSwingGUI implements BrissGUIApp {
 	}
 
 	private void startCropping() {
-		System.out.println("startCropping running");
 		showSaveFileDialog();
 	}
 
@@ -364,7 +363,6 @@ public class BrissSwingGUI implements BrissGUIApp {
 	}
 
 	private void savePDF(File file) {
-		System.out.println("savePDF running");
 		setWorkingState(Messages.getString("BrissGUI.loadingPDF")); // $NON-NLS-1$
 		try {
 			CropDefinition cropDefinition = CropDefinition.createCropDefinition(workingSet.getSourceFile(), file,
@@ -384,7 +382,6 @@ public class BrissSwingGUI implements BrissGUIApp {
 	}
 
 	private void showPreview() {
-		System.out.println("showPreview running");
 		try {
 			setWorkingState(Messages.getString("BrissGUI.createShowPreview")); // $NON-NLS-1$
 			File result = createAndExecuteCropJobForPreview();
@@ -501,7 +498,6 @@ public class BrissSwingGUI implements BrissGUIApp {
 
 	@Override
 	public void alignSelRects(int x, int y, int w, int h) {
-		System.out.println("alignSelRects running");
 		// set position and size of selected rectangles
 		for (MergedPanel mp : mergedPanels) {
 			mp.setSelCropSize(w, h);
@@ -511,7 +507,6 @@ public class BrissSwingGUI implements BrissGUIApp {
 
 	@Override
 	public void resizeAndMoveSelectedRects(int width, int height, int x, int y) {
-		System.out.println("resizeAndMoveSelectedRects running");
 		// resize and move selected rectangles
 		// parameters are relative to current position
 		for (MergedPanel mp : mergedPanels) {
@@ -521,7 +516,6 @@ public class BrissSwingGUI implements BrissGUIApp {
 
 	@Override
 	public void moveSelectedRects(int x, int y) {
-		System.out.println("moveSelectedRects running");
 		// move selected rectangles
 		// parameters are relative to current position
 		for (MergedPanel mp : mergedPanels) {
@@ -538,10 +532,8 @@ public class BrissSwingGUI implements BrissGUIApp {
 
 	@Override
 	public void setDefinedSizeSelRects() {
-		System.out.println("setDefinedSizeSelRects running");
 		// set size of selected rectangles
 		// based on user input
-		System.out.println("Running setDefinedSizeSelRects");
 
 		String defInput = ""; // $NON-NLS-1$
 
@@ -596,11 +588,8 @@ public class BrissSwingGUI implements BrissGUIApp {
 
 	@Override
 	public void setPositionSelRects() {
-		System.out.println("setPositionSelRects running");
 		// set position of selected rectangles
 		// based on user input
-
-		System.out.println("Running setPositionSelRects");
 
 		String defInput = ""; // $NON-NLS-1$
 
@@ -654,7 +643,6 @@ public class BrissSwingGUI implements BrissGUIApp {
 
 	@Override
 	public void resizeSelRects(int w, int h) {
-		System.out.println("resizeSelRects running");
 		// change size of selected rectangles (relative)
 		for (MergedPanel mp : mergedPanels) {
 			mp.resizeSelCrop(w, h);
@@ -664,7 +652,6 @@ public class BrissSwingGUI implements BrissGUIApp {
 	private void setStateAfterClusteringFinished(ClusterDefinition newClusters, PageExcludes newPageExcludes,
 			File newSource, String password) {
 
-		System.out.println("setStateAfterClusteringFinished running");
 		updateWorkingSet(newClusters, newPageExcludes, newSource, password);
 
 		previewPanel.removeAll();
@@ -689,7 +676,6 @@ public class BrissSwingGUI implements BrissGUIApp {
 
 	private void updateWorkingSet(ClusterDefinition newClusters, PageExcludes newPageExcludes, File newSource,
 			String password) {
-		System.out.println("Running updateWorkingSet");
 		if (workingSet == null) {
 			// completely new
 			workingSet = new WorkingSet(newSource, password);
@@ -703,7 +689,6 @@ public class BrissSwingGUI implements BrissGUIApp {
 	}
 
 	private void copyCropsToClusters(ClusterDefinition oldClusters, ClusterDefinition newClusters) {
-		System.out.println("Running copyCropsToClusters");
 		for (PageCluster newCluster : newClusters.getClusterList()) {
 			for (Integer pageNumber : newCluster.getAllPages()) {
 				PageCluster oldCluster = oldClusters.getSingleCluster(pageNumber);

@@ -13,9 +13,11 @@ public class CommandValues {
 		List<Integer> oddRects = Collections.emptyList();
 		List<Integer> evenRects = Collections.emptyList();
 		List<Integer> rects = Collections.emptyList();
+
 	}
 
 	private CommandValues() {
+		super();
 	}
 
 	private static final String SOURCE_FILE_CMD = "-s";
@@ -162,7 +164,7 @@ public class CommandValues {
 	public Boolean rectangleDeclared() {
 		Boolean separateRectsDeclared = (!rectDeclaration.evenRects.isEmpty() && !rectDeclaration.oddRects.isEmpty());
 		Boolean mainRectsDeclared = !rectDeclaration.rects.isEmpty();
-		
+
 		return separateRectsDeclared || mainRectsDeclared;
 	}
 

@@ -9,11 +9,10 @@ public class CommandLineCrop {
 
 	public static void cropFromCommandLine(CommandValues parsedArgs) {
 		if (!CommandValues.isValidJob(parsedArgs)) {
-            System.out.println("Invalid arguments passed with crop request; exiting");
-            return;
-        }
+			System.out.println("Invalid arguments passed with crop request; exiting");
+			return;
+		}
 
-        
 	}
 
 }

@@ -122,7 +122,6 @@ public final class DocumentCropper {
 	private static void cropMultipliedFile(final CropDefinition cropDefinition, final File multipliedDocument,
 			final PdfMetaInformation pdfMetaInformation, String password) throws DocumentException, IOException {
 
-		System.out.println("cropMultipliedFile running");
 		PdfReader reader = PDFReaderUtil.getPdfReader(multipliedDocument.getAbsolutePath(), password);
 
 		PdfStamper stamper = new PdfStamper(reader, new FileOutputStream(cropDefinition.getDestinationFile()));
@@ -143,10 +142,6 @@ public final class DocumentCropper {
 			}
 
 			for (float[] ratios : rectangleList) {
-				System.out.format("printing rectangle list for sourcePageNumber %d\n", sourcePageNumber);
-				for (float ratio : ratios) {
-					System.out.format("Ratio: %f\n", ratio);
-				}
 				System.out.println();
 
 				pageDict = reader.getPageN(newPageNumber);
@@ -156,8 +151,8 @@ public final class DocumentCropper {
 				boxes.add(reader.getBoxSize(newPageNumber, "crop"));
 				int rotation = reader.getPageRotation(newPageNumber);
 
-				System.out.println("This is the method that gives us the dimensions we need");
 				Rectangle scaledBox = RectangleHandler.calculateScaledRectangle(boxes, ratios, rotation);
+				System.out.println("Rectangle calculated using DocumentCropper path");
 
 				// // code should be separated out into a different method
 

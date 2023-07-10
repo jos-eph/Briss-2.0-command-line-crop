@@ -125,6 +125,7 @@ public class CropManager {
 				int rotation = reader.getPageRotation(newPageNumber);
 
 				Rectangle scaledBox = calculateScaledRectangle(boxes, ratios, rotation);
+				System.out.println("Rectangle calculated using CropManager Path");
 
 				PdfArray scaleBoxArray = new PdfArray();
 				scaleBoxArray.add(new PdfNumber(scaledBox.getLeft()));
