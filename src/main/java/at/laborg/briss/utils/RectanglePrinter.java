@@ -15,6 +15,6 @@ public class RectanglePrinter {
 	}
 
 	public static String rectangleToString(Rectangle rectangle) {
-		return String.format("%s\n", RectanglePrinter.rectangleToList(rectangle).toString());
+		return String.format("%s ", RectanglePrinter.rectangleToList(rectangle).toString());
 	}
 }

@@ -51,6 +51,8 @@ public final class DocumentCropper {
 	public static File crop(final CropDefinition cropDefinition, String password)
 			throws IOException, DocumentException, CropException {
 
+		System.out.println("Running crop within DocumentCropper");
+
 		// check if everything is ready
 		if (!BrissFileHandling.checkValidStateAndCreate(cropDefinition.getDestinationFile()))
 			throw new IOException("Destination file not valid");
@@ -62,12 +64,16 @@ public final class DocumentCropper {
 		File intermediatePdf = copyToMultiplePages(cropDefinition, pdfMetaInformation, password);
 
 		// now crop all pages according to their ratios
-		cropMultipliedFile(cropDefinition, intermediatePdf, pdfMetaInformation, password);
+		cropMultipliedFile(cropDefinition, intermediatePdf, pdfMetaInformation, password); // calls the method we use
+																							// interactively
 		return cropDefinition.getDestinationFile();
 	}
 
 	private static File copyToMultiplePages(final CropDefinition cropDefinition,
 			final PdfMetaInformation pdfMetaInformation, String password) throws IOException, DocumentException {
+		/* 
+		 * Adds extra pages 
+		 */
 
 		PdfReader reader = PDFReaderUtil.getPdfReader(cropDefinition.getSourceFile().getAbsolutePath(), password);
 		HashMap<String, String> map = SimpleNamedDestination.getNamedDestination(reader, false);
@@ -97,18 +103,21 @@ public final class DocumentCropper {
 		int outputPageNumber = 0;
 		for (int pageNumber = 1; pageNumber <= pdfMetaInformation.getSourcePageCount(); pageNumber++) {
 
-			PdfImportedPage pdfPage = pdfCopy.getImportedPage(reader, pageNumber);
+			PdfImportedPage pdfPage = pdfCopy.getImportedPage(reader, pageNumber); // original page
 
 			pdfCopy.addPage(pdfPage);
 			outputPageNumber++;
+			System.out.format("pageNumber %s, outputPageNumber %s in outermost loop\n", pageNumber, outputPageNumber);
 			List<String> destinations = pageNrToDestinations.get(pageNumber);
 			if (destinations != null) {
 				for (String destination : destinations)
 					pdfCopy.addNamedDestination(destination, outputPageNumber, new PdfDestination(PdfDestination.FIT));
 			}
 			List<float[]> rectangles = cropDefinition.getRectanglesForPage(pageNumber);
-			for (int j = 1; j < rectangles.size(); j++) {
-				pdfCopy.addPage(pdfPage);
+			for (int j = 1; j < rectangles.size(); j++) { // only executes for extra rectangles
+				System.out.format("Rectangle loop: rectangle %s, pageNumber %s, outputPageNumber %s\n", j + 1, pageNumber,
+						outputPageNumber);
+				pdfCopy.addPage(pdfPage); // copies the original page to the resultant file
 				outputPageNumber++;
 			}
 		}
@@ -121,6 +130,8 @@ public final class DocumentCropper {
 	// this method is operating on an object, not returning it
 	private static void cropMultipliedFile(final CropDefinition cropDefinition, final File multipliedDocument,
 			final PdfMetaInformation pdfMetaInformation, String password) throws DocumentException, IOException {
+
+		System.out.println("Running cropMultipliedFile");
 
 		PdfReader reader = PDFReaderUtil.getPdfReader(multipliedDocument.getAbsolutePath(), password);
 
@@ -160,8 +171,8 @@ public final class DocumentCropper {
 
 				PdfArray scaleBoxArray = createScaledBoxArray(scaledBox);
 
-				pageDict.put(PdfName.CROPBOX, scaleBoxArray);
-				pageDict.put(PdfName.MEDIABOX, scaleBoxArray);
+				pageDict.put(PdfName.CROPBOX, scaleBoxArray); // doing the work here
+				pageDict.put(PdfName.MEDIABOX, scaleBoxArray); // doing the work here
 
 				// increment the pagenumber
 				newPageNumber++;
