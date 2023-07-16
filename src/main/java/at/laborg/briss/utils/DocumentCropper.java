@@ -43,6 +43,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import at.laborg.briss.utils.rectCapture.CaptureRectangle;
+
 public final class DocumentCropper {
 
 	private DocumentCropper() {
@@ -71,8 +73,8 @@ public final class DocumentCropper {
 
 	private static File copyToMultiplePages(final CropDefinition cropDefinition,
 			final PdfMetaInformation pdfMetaInformation, String password) throws IOException, DocumentException {
-		/* 
-		 * Adds extra pages 
+		/*
+		 * Adds extra pages
 		 */
 
 		PdfReader reader = PDFReaderUtil.getPdfReader(cropDefinition.getSourceFile().getAbsolutePath(), password);
@@ -115,8 +117,6 @@ public final class DocumentCropper {
 			}
 			List<float[]> rectangles = cropDefinition.getRectanglesForPage(pageNumber);
 			for (int j = 1; j < rectangles.size(); j++) { // only executes for extra rectangles
-				System.out.format("Rectangle loop: rectangle %s, pageNumber %s, outputPageNumber %s\n", j + 1, pageNumber,
-						outputPageNumber);
 				pdfCopy.addPage(pdfPage); // copies the original page to the resultant file
 				outputPageNumber++;
 			}
@@ -132,6 +132,7 @@ public final class DocumentCropper {
 			final PdfMetaInformation pdfMetaInformation, String password) throws DocumentException, IOException {
 
 		System.out.println("Running cropMultipliedFile");
+		CaptureRectangle captureRectangle = new CaptureRectangle();
 
 		PdfReader reader = PDFReaderUtil.getPdfReader(multipliedDocument.getAbsolutePath(), password);
 
@@ -163,11 +164,9 @@ public final class DocumentCropper {
 				int rotation = reader.getPageRotation(newPageNumber);
 
 				Rectangle scaledBox = RectangleHandler.calculateScaledRectangle(boxes, ratios, rotation);
-				System.out.println("Rectangle calculated using DocumentCropper path");
 				System.out.format("Rectangle %s for newPageNumber %s, sourcePageNumber %s calculated\n",
-						RectanglePrinter.rectangleToString(scaledBox), newPageNumber, sourcePageNumber);
-
-				// // code should be separated out into a different method
+						RectangleInfo.rectangleToString(scaledBox), newPageNumber, sourcePageNumber);
+				captureRectangle.storePageRectangle(sourcePageNumber, scaledBox);
 
 				PdfArray scaleBoxArray = createScaledBoxArray(scaledBox);
 
@@ -177,7 +176,6 @@ public final class DocumentCropper {
 				// increment the pagenumber
 				newPageNumber++;
 
-				// // end of independent code
 			}
 			int[] range = new int[2];
 			range[0] = newPageNumber - 1;
@@ -185,6 +183,9 @@ public final class DocumentCropper {
 			SimpleBookmark.shiftPageNumbers(pdfMetaInformation.getSourceBookmarks(), rectangleList.size() - 1, range);
 		}
 		stamper.setOutlines(pdfMetaInformation.getSourceBookmarks());
+
+		captureRectangle.debugPrintOutMappings();
+
 		stamper.close();
 		reader.close();
 	}

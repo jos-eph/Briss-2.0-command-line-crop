@@ -32,6 +32,7 @@ public final class ClusterCreator {
 
 	public static ClusterDefinition clusterPages(final File source, String password, final PageExcludes pageExcludes)
 			throws IOException {
+		System.out.println("ClusterCreator clusterPages running - odd/even");
 		PdfReader reader = PDFReaderUtil.getPdfReader(source.getAbsolutePath(), password);
 
 		ClusterDefinition clusters = new ClusterDefinition();
@@ -46,7 +47,7 @@ public final class ClusterCreator {
 
 			boolean excluded = checkExclusionAndGetPageNumber(pageExcludes, page);
 
-			PageCluster tmpCluster = new PageCluster(page % 2 == 0, (int) layoutBox.getWidth(),
+			PageCluster tmpCluster = new PageCluster(page % 2 == 0, (int) layoutBox.getWidth(), // odd/even
 					(int) layoutBox.getHeight(), excluded, page);
 
 			clusters.addOrMergeCluster(tmpCluster);

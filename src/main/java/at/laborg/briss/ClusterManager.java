@@ -28,7 +28,7 @@ import java.io.IOException;
 import org.jpedal.PdfDecoder;
 import org.jpedal.exception.PdfException;
 
-public class ClusterManager {
+public class ClusterManager { // class does not appear to be needed/called
 
 	public static ClusterJob createClusterJob(File origFile) throws IOException, PdfException {
 
@@ -39,6 +39,7 @@ public class ClusterManager {
 	}
 
 	public static void clusterPages(ClusterJob clusterJob) throws IOException {
+		System.out.println("ClusterManager clusterPages running - odd/even");
 		PdfReader reader = new PdfReader(clusterJob.getSource().getAbsolutePath());
 
 		ClusterCollection clusters = clusterJob.getClusterCollection();
@@ -58,7 +59,7 @@ public class ClusterManager {
 				pageNumber = page;
 			}
 
-			SingleCluster tmpCluster = new SingleCluster(page % 2 == 0, (int) layoutBox.getWidth(),
+			SingleCluster tmpCluster = new SingleCluster(page % 2 == 0, (int) layoutBox.getWidth(), // odd/even
 					(int) layoutBox.getHeight(), pageNumber);
 
 			clusters.addPageToCluster(tmpCluster, page);

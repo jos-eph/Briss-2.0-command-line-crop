@@ -362,7 +362,7 @@ public class BrissSwingGUI implements BrissGUIApp {
 		}
 	}
 
-	private void savePDF(File file) {
+	private void savePDF(File file) { // important method for odd-even crops
 		setWorkingState(Messages.getString("BrissGUI.loadingPDF")); // $NON-NLS-1$
 		try {
 			CropDefinition cropDefinition = CropDefinition.createCropDefinition(workingSet.getSourceFile(), file,
@@ -729,15 +729,18 @@ public class BrissSwingGUI implements BrissGUIApp {
 
 		@Override
 		protected Void doInBackground() {
+			System.out.println("Running doInBackground...");
 
 			try {
-				clusterDefinition = ClusterCreator.clusterPages(source, password, pageExcludes);
+				clusterDefinition = ClusterCreator.clusterPages(source, password, pageExcludes); // where odds and evens
+																									// are added
 
 			} catch (Exception e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 				return null;
 			}
+			// trap Rectangles here
 
 			int totalWorkUnits = clusterDefinition.getNrOfPagesToRender();
 
