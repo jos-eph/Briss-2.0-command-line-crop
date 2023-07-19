@@ -72,7 +72,7 @@ public class CaptureRectangle {
 		Map<List<Float>, List<Integer>> uniqueBiggestRectsSorted = new HashMap<>();
 		uniqueBiggestRects.forEach((rectangle, setOfPages) -> uniqueBiggestRectsSorted.put(rectangle,
 				setOfPages.stream().sorted().collect(Collectors.toList())));
-		return uniqueBiggestRectsSorted;
+		return Collections.unmodifiableMap(uniqueBiggestRectsSorted);
 	}
 
 	public void debugPrintOutMappings() {
