@@ -20,6 +20,8 @@ package at.laborg.briss.utils;
 
 import at.laborg.briss.exception.CropException;
 import at.laborg.briss.model.CropDefinition;
+import at.laborg.briss.utils.rectcapture.CaptureRectangle;
+
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Rectangle;
@@ -42,8 +44,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
-
-import at.laborg.briss.utils.rectCapture.CaptureRectangle;
 
 public final class DocumentCropper {
 
