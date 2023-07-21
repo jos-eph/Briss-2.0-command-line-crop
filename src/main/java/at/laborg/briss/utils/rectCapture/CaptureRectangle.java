@@ -17,7 +17,13 @@ public class CaptureRectangle {
 	Boolean computedRects = Boolean.FALSE;
 	private Map<Integer, Set<List<Float>>> pageRectangles = new HashMap<>();
 	private Map<Integer, List<Float>> biggestPageRects = new HashMap<>();
+
 	private Map<List<Float>, Set<Integer>> uniqueBiggestRects = new HashMap<>();
+	private Map<List<Float>, Set<PageEvenOddEnum>> uniqueBiggestRectsEvennness = new HashMap<>();
+
+	public Map<List<Float>, Set<PageEvenOddEnum>> getUniqueBiggestRectsEvennness() {
+		return uniqueBiggestRectsEvennness;
+	}
 
 	public void storePageRectangle(Integer page, Rectangle calculatedRectangle) {
 		if (Boolean.TRUE.equals(computedRects)) {
@@ -31,9 +37,13 @@ public class CaptureRectangle {
 		addToThisSet.add(rectangleFloats);
 	}
 
-	public void computeBiggestRects() {
+	protected Boolean computeBiggestRects() {
 		if (pageRectangles.size() == 0) {
 			throw new IllegalStateException("No rectangles stored in the collector.");
+		}
+		if (Boolean.TRUE.equals(computedRects)) {
+			System.out.println("Rects already computed");
+			return Boolean.FALSE;
 		}
 		for (Entry<Integer, Set<List<Float>>> pageRectSet : this.pageRectangles.entrySet()) {
 			Integer pageNumber = pageRectSet.getKey();
@@ -43,22 +53,24 @@ public class CaptureRectangle {
 		}
 		computeUniqueBiggestRects();
 
+		computedRects = Boolean.TRUE;
+
+		return Boolean.TRUE;
 	}
 
 	private void computeUniqueBiggestRects() {
-		if (Boolean.TRUE.equals(computedRects)) {
-			return;
-		}
 
 		for (Entry<Integer, List<Float>> biggestRectPerPage : biggestPageRects.entrySet()) {
 			Integer pageNumber = biggestRectPerPage.getKey();
 			List<Float> biggestRect = biggestRectPerPage.getValue();
 
-			if (!uniqueBiggestRects.containsKey(biggestRect)) {
-				uniqueBiggestRects.put(biggestRect, new HashSet<>());
-			}
-			Set<Integer> addToThisPageList = this.uniqueBiggestRects.get(biggestRect);
-			addToThisPageList.add(pageNumber);
+			uniqueBiggestRects.computeIfAbsent(biggestRect, (absentRect) -> new HashSet<>());
+			Set<Integer> addToThisPageSet = this.uniqueBiggestRects.get(biggestRect);
+			addToThisPageSet.add(pageNumber);
+
+			uniqueBiggestRectsEvennness.computeIfAbsent(biggestRect, (absentRect) -> new HashSet<>());
+			uniqueBiggestRectsEvennness.get(biggestRect)
+					.add(pageNumber % 2 == 0 ? PageEvenOddEnum.EVEN : PageEvenOddEnum.ODD);
 		}
 	}
 
