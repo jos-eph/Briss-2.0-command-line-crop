@@ -729,7 +729,6 @@ public class BrissSwingGUI implements BrissGUIApp {
 
 		@Override
 		protected Void doInBackground() {
-			System.out.println("Running doInBackground...");
 
 			try {
 				clusterDefinition = ClusterCreator.clusterPages(source, password, pageExcludes); // where odds and evens

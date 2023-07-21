@@ -39,7 +39,6 @@ public class ClusterManager { // class does not appear to be needed/called
 	}
 
 	public static void clusterPages(ClusterJob clusterJob) throws IOException {
-		System.out.println("ClusterManager clusterPages running - odd/even");
 		PdfReader reader = new PdfReader(clusterJob.getSource().getAbsolutePath());
 
 		ClusterCollection clusters = clusterJob.getClusterCollection();

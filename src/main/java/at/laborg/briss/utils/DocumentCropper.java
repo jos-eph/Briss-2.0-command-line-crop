@@ -53,8 +53,6 @@ public final class DocumentCropper {
 	public static File crop(final CropDefinition cropDefinition, String password)
 			throws IOException, DocumentException, CropException {
 
-		System.out.println("Running crop within DocumentCropper");
-
 		// check if everything is ready
 		if (!BrissFileHandling.checkValidStateAndCreate(cropDefinition.getDestinationFile()))
 			throw new IOException("Destination file not valid");
@@ -131,7 +129,6 @@ public final class DocumentCropper {
 	private static void cropMultipliedFile(final CropDefinition cropDefinition, final File multipliedDocument,
 			final PdfMetaInformation pdfMetaInformation, String password) throws DocumentException, IOException {
 
-		System.out.println("Running cropMultipliedFile");
 		CaptureRectangle captureRectangle = new CaptureRectangle();
 
 		PdfReader reader = PDFReaderUtil.getPdfReader(multipliedDocument.getAbsolutePath(), password);

@@ -31,7 +31,6 @@ class CommandValuesTest {
 	@MethodSource("provideTestRectCommandValues")
 	void testRectValues(String rectArgs, Boolean expectExceptionOnGetRects, List<Integer> expectedOdd,
 			List<Integer> expectedEven) {
-		System.out.println("TEST RECT VALUES");
 		String[] argArray = rectArgs.split(" ");
 		if (Boolean.TRUE.equals(expectExceptionOnGetRects)) {
 			CommandValues parsedArgs = CommandValues.parseToWorkDescription(argArray);

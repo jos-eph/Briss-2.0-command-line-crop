@@ -42,7 +42,7 @@ public class CaptureRectangle {
 			throw new IllegalStateException("No rectangles stored in the collector.");
 		}
 		if (Boolean.TRUE.equals(computedRects)) {
-			System.out.println("Rects already computed");
+			System.out.println("Rects already computed; returning existing computation");
 			return Boolean.FALSE;
 		}
 		for (Entry<Integer, Set<List<Float>>> pageRectSet : this.pageRectangles.entrySet()) {
