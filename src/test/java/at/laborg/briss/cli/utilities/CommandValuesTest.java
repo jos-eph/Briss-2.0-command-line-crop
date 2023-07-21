@@ -31,7 +31,6 @@ class CommandValuesTest {
 	@MethodSource("provideTestRectCommandValues")
 	void testRectValues(String rectArgs, Boolean expectExceptionOnGetRects, List<Integer> expectedOdd,
 			List<Integer> expectedEven) {
-		System.out.println("TEST RECT VALUES");
 		String[] argArray = rectArgs.split(" ");
 		if (Boolean.TRUE.equals(expectExceptionOnGetRects)) {
 			CommandValues parsedArgs = CommandValues.parseToWorkDescription(argArray);
@@ -45,7 +44,7 @@ class CommandValuesTest {
 		String[] inputargs = {"--exclude-pages", "1,2,200,300"};
 		CommandValues parsedArgs = CommandValues.parseToWorkDescription(inputargs);
 
-		List<Integer> expected = List.of(1,2,200,300);
+		List<Integer> expected = List.of(1, 2, 200, 300);
 		List<Integer> result = parsedArgs.getExcludePages();
 
 		assertEquals(expected, result);

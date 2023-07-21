@@ -20,6 +20,8 @@ package at.laborg.briss.utils;
 
 import at.laborg.briss.exception.CropException;
 import at.laborg.briss.model.CropDefinition;
+import at.laborg.briss.utils.rectcapture.CaptureRectangle;
+
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Rectangle;
@@ -62,12 +64,16 @@ public final class DocumentCropper {
 		File intermediatePdf = copyToMultiplePages(cropDefinition, pdfMetaInformation, password);
 
 		// now crop all pages according to their ratios
-		cropMultipliedFile(cropDefinition, intermediatePdf, pdfMetaInformation, password);
+		cropMultipliedFile(cropDefinition, intermediatePdf, pdfMetaInformation, password); // calls the method we use
+																							// interactively
 		return cropDefinition.getDestinationFile();
 	}
 
 	private static File copyToMultiplePages(final CropDefinition cropDefinition,
 			final PdfMetaInformation pdfMetaInformation, String password) throws IOException, DocumentException {
+		/*
+		 * Adds extra pages
+		 */
 
 		PdfReader reader = PDFReaderUtil.getPdfReader(cropDefinition.getSourceFile().getAbsolutePath(), password);
 		HashMap<String, String> map = SimpleNamedDestination.getNamedDestination(reader, false);
@@ -97,18 +103,19 @@ public final class DocumentCropper {
 		int outputPageNumber = 0;
 		for (int pageNumber = 1; pageNumber <= pdfMetaInformation.getSourcePageCount(); pageNumber++) {
 
-			PdfImportedPage pdfPage = pdfCopy.getImportedPage(reader, pageNumber);
+			PdfImportedPage pdfPage = pdfCopy.getImportedPage(reader, pageNumber); // original page
 
 			pdfCopy.addPage(pdfPage);
 			outputPageNumber++;
+			System.out.format("pageNumber %s, outputPageNumber %s in outermost loop\n", pageNumber, outputPageNumber);
 			List<String> destinations = pageNrToDestinations.get(pageNumber);
 			if (destinations != null) {
 				for (String destination : destinations)
 					pdfCopy.addNamedDestination(destination, outputPageNumber, new PdfDestination(PdfDestination.FIT));
 			}
 			List<float[]> rectangles = cropDefinition.getRectanglesForPage(pageNumber);
-			for (int j = 1; j < rectangles.size(); j++) {
-				pdfCopy.addPage(pdfPage);
+			for (int j = 1; j < rectangles.size(); j++) { // only executes for extra rectangles
+				pdfCopy.addPage(pdfPage); // copies the original page to the resultant file
 				outputPageNumber++;
 			}
 		}
@@ -122,7 +129,8 @@ public final class DocumentCropper {
 	private static void cropMultipliedFile(final CropDefinition cropDefinition, final File multipliedDocument,
 			final PdfMetaInformation pdfMetaInformation, String password) throws DocumentException, IOException {
 
-		System.out.println("cropMultipliedFile running");
+		CaptureRectangle captureRectangle = new CaptureRectangle();
+
 		PdfReader reader = PDFReaderUtil.getPdfReader(multipliedDocument.getAbsolutePath(), password);
 
 		PdfStamper stamper = new PdfStamper(reader, new FileOutputStream(cropDefinition.getDestinationFile()));
@@ -143,10 +151,6 @@ public final class DocumentCropper {
 			}
 
 			for (float[] ratios : rectangleList) {
-				System.out.format("printing rectangle list for sourcePageNumber %d\n", sourcePageNumber);
-				for (float ratio : ratios) {
-					System.out.format("Ratio: %f\n", ratio);
-				}
 				System.out.println();
 
 				pageDict = reader.getPageN(newPageNumber);
@@ -156,20 +160,19 @@ public final class DocumentCropper {
 				boxes.add(reader.getBoxSize(newPageNumber, "crop"));
 				int rotation = reader.getPageRotation(newPageNumber);
 
-				System.out.println("This is the method that gives us the dimensions we need");
 				Rectangle scaledBox = RectangleHandler.calculateScaledRectangle(boxes, ratios, rotation);
-
-				// // code should be separated out into a different method
+				System.out.format("Rectangle %s for newPageNumber %s, sourcePageNumber %s calculated\n",
+						RectangleInfo.rectangleToString(scaledBox), newPageNumber, sourcePageNumber);
+				captureRectangle.storePageRectangle(sourcePageNumber, scaledBox);
 
 				PdfArray scaleBoxArray = createScaledBoxArray(scaledBox);
 
-				pageDict.put(PdfName.CROPBOX, scaleBoxArray);
-				pageDict.put(PdfName.MEDIABOX, scaleBoxArray);
+				pageDict.put(PdfName.CROPBOX, scaleBoxArray); // doing the work here
+				pageDict.put(PdfName.MEDIABOX, scaleBoxArray); // doing the work here
 
 				// increment the pagenumber
 				newPageNumber++;
 
-				// // end of independent code
 			}
 			int[] range = new int[2];
 			range[0] = newPageNumber - 1;
@@ -177,6 +180,9 @@ public final class DocumentCropper {
 			SimpleBookmark.shiftPageNumbers(pdfMetaInformation.getSourceBookmarks(), rectangleList.size() - 1, range);
 		}
 		stamper.setOutlines(pdfMetaInformation.getSourceBookmarks());
+
+		captureRectangle.debugPrintOutMappings();
+
 		stamper.close();
 		reader.close();
 	}

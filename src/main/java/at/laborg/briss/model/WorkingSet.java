@@ -48,7 +48,6 @@ public class WorkingSet {
 	}
 
 	public final void setClusters(final ClusterDefinition clusters) {
-		System.out.println("running setClusters");
 		this.clusters = clusters;
 	}
 

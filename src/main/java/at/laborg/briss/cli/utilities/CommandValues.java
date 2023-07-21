@@ -13,9 +13,11 @@ public class CommandValues {
 		List<Integer> oddRects = Collections.emptyList();
 		List<Integer> evenRects = Collections.emptyList();
 		List<Integer> rects = Collections.emptyList();
+
 	}
 
 	private CommandValues() {
+		super();
 	}
 
 	private static final String SOURCE_FILE_CMD = "-s";
@@ -52,14 +54,9 @@ public class CommandValues {
 	}
 
 	public static CommandValues parseToWorkDescription(final String[] args) {
-		System.out.println("Printing args as received");
-		System.out.println("Printing again");
-		for (String arg : args) {
-			System.out.println(arg);
-		}
 
 		CommandValues commandValues = new CommandValues();
-		RectDeclaration rectDeclaration = commandValues.new RectDeclaration();
+		commandValues.rectDeclaration = commandValues.new RectDeclaration();
 		int i = 0;
 		while (i < args.length) {
 			String arg = args[i].trim();
@@ -79,18 +76,18 @@ public class CommandValues {
 				commandValues.password = args[i + 1];
 			} else if (arg.equalsIgnoreCase(ODD_RECTS)) {
 				List<Integer> oddRects = IntegerParser.parseIntsFromDelimitedString(args[i + 1], 4);
-				rectDeclaration.oddRects = oddRects;
+				commandValues.rectDeclaration.oddRects = oddRects;
 			} else if (arg.equalsIgnoreCase(EVEN_RECTS)) {
 				List<Integer> evenRects = IntegerParser.parseIntsFromDelimitedString(args[i + 1], 4);
-				rectDeclaration.evenRects = evenRects;
+				commandValues.rectDeclaration.evenRects = evenRects;
 			} else if (arg.equalsIgnoreCase(RECTS)) {
 				List<Integer> rects = IntegerParser.parseIntsFromDelimitedString(args[i + 1], 4);
-				rectDeclaration.rects = rects;
+				commandValues.rectDeclaration.rects = rects;
 			} else if (arg.equalsIgnoreCase(EXCLUDE_PAGES)) {
 				if (i < (args.length - 1)) {
 					List<Integer> exclude_pages = IntegerParser.parseIntsFromDelimitedString(args[i + 1]);
 					commandValues.setExcludePages(exclude_pages);
-				} 
+				}
 			}
 
 			i++;
@@ -101,7 +98,7 @@ public class CommandValues {
 
 	public static boolean isValidJob(final CommandValues job) {
 		if (job.getSourceFile() == null) {
-			System.out.println("No source file submitted: try \"java -jar Briss.0.0.13 -s filename.pdf\"");
+			System.out.println("No source file submitted: try \"java -jar <<briss-jar-name>> -s filename.pdf\"");
 			return false;
 		}
 		if (!job.getSourceFile().exists()) {
@@ -167,13 +164,6 @@ public class CommandValues {
 	public Boolean rectangleDeclared() {
 		Boolean separateRectsDeclared = (!rectDeclaration.evenRects.isEmpty() && !rectDeclaration.oddRects.isEmpty());
 		Boolean mainRectsDeclared = !rectDeclaration.rects.isEmpty();
-
-		System.out.format("\nOdd rects, even rects: %s, %s\n", rectDeclaration.oddRects, rectDeclaration.evenRects);
-
-		System.out.format("\nSeparate rects declared, mainRectsDeclared: %s, %s\n", separateRectsDeclared,
-				mainRectsDeclared);
-
-		System.out.format("\nRectangle declared: %s\n", separateRectsDeclared || mainRectsDeclared);
 
 		return separateRectsDeclared || mainRectsDeclared;
 	}

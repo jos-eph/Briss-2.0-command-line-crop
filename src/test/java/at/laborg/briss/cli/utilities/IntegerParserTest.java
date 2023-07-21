@@ -5,7 +5,7 @@ import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class IntegerParserTest {
+class IntegerParserTest {
 
 	String sourceString = "1,6,20,24";
 
