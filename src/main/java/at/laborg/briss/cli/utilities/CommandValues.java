@@ -10,9 +10,9 @@ import at.laborg.briss.utils.BrissFileHandling;
 public class CommandValues {
 
 	private class RectDeclaration {
-		List<Integer> oddRects = Collections.emptyList();
-		List<Integer> evenRects = Collections.emptyList();
-		List<Integer> rects = Collections.emptyList();
+		List<Float> oddRects = Collections.emptyList();
+		List<Float> evenRects = Collections.emptyList();
+		List<Float> rects = Collections.emptyList();
 
 	}
 
@@ -75,17 +75,17 @@ public class CommandValues {
 			} else if (arg.equalsIgnoreCase(FILE_PASSWORD_CMD)) {
 				commandValues.password = args[i + 1];
 			} else if (arg.equalsIgnoreCase(ODD_RECTS)) {
-				List<Integer> oddRects = IntegerParser.parseIntsFromDelimitedString(args[i + 1], 4);
+				List<Float> oddRects = NumberParser.parseFloatsFromDelimitedString(args[i + 1], 4);
 				commandValues.rectDeclaration.oddRects = oddRects;
 			} else if (arg.equalsIgnoreCase(EVEN_RECTS)) {
-				List<Integer> evenRects = IntegerParser.parseIntsFromDelimitedString(args[i + 1], 4);
+				List<Float> evenRects = NumberParser.parseFloatsFromDelimitedString(args[i + 1], 4);
 				commandValues.rectDeclaration.evenRects = evenRects;
 			} else if (arg.equalsIgnoreCase(RECTS)) {
-				List<Integer> rects = IntegerParser.parseIntsFromDelimitedString(args[i + 1], 4);
+				List<Float> rects = NumberParser.parseFloatsFromDelimitedString(args[i + 1], 4);
 				commandValues.rectDeclaration.rects = rects;
 			} else if (arg.equalsIgnoreCase(EXCLUDE_PAGES)) {
 				if (i < (args.length - 1)) {
-					List<Integer> exclude_pages = IntegerParser.parseIntsFromDelimitedString(args[i + 1]);
+					List<Integer> exclude_pages = NumberParser.parseIntegersFromDelimitedString(args[i + 1]);
 					commandValues.setExcludePages(exclude_pages);
 				}
 			}
@@ -176,7 +176,7 @@ public class CommandValues {
 		return (!rectDeclaration.evenRects.isEmpty() && !rectDeclaration.oddRects.isEmpty());
 	}
 
-	public List<Integer> getEvenRects() {
+	public List<Float> getEvenRects() {
 		if (!rectangleDeclared()) {
 			throw new IllegalStateException();
 		}
@@ -184,7 +184,7 @@ public class CommandValues {
 		return oddEvenRectsFullySpecified() ? rectDeclaration.evenRects : rectDeclaration.rects;
 	}
 
-	public List<Integer> getOddRects() {
+	public List<Float> getOddRects() {
 		if (!rectangleDeclared()) {
 			throw new IllegalStateException();
 		}
