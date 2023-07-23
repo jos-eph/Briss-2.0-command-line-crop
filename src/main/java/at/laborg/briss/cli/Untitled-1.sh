@@ -1,0 +1,1 @@
+java -jar ./build/libs/briss-command-crop.jar -s $HOME/Downloads/21-476_c185.pdf -d $HOME/Desktop/testcrop.pdf --odd-rects 147.0,154.0,460.0,642.0 --even-rects 148.0,152.0,461.00003,643.0 --exclude-pages 5

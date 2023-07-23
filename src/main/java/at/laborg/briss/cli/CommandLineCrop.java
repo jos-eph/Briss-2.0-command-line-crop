@@ -20,6 +20,7 @@ import at.laborg.briss.utils.PdfMetaInformation;
 import static at.laborg.briss.utils.CreateScaledBoxArray.createScaledBoxArray;
 
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -33,7 +34,7 @@ public class CommandLineCrop {
 		System.out.println("Creating tempfile...");
 		tempFile = File.createTempFile("exactCopy", ".pdf");
 		System.out.println("Copying source to tempfile...");
-		Files.copy(sourceFile.toPath(), tempFile.toPath());
+		Files.copy(sourceFile.toPath(), tempFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 		return tempFile;
 	}
 
@@ -45,6 +46,11 @@ public class CommandLineCrop {
 			copiedSourceWithMetaInfo.setPdfMetaInformation(new PdfMetaInformation(sourceFile, password));
 		} catch (IOException ex) {
 			System.err.println("Error opening source file. Exiting...");
+			System.err.println(ex.getStackTrace());
+			System.err.println(ex.getLocalizedMessage());
+			System.err.println(ex.getMessage());
+			System.err.println(ex.getCause());
+			ex.printStackTrace();
 			System.exit(-1);
 		}
 
@@ -87,7 +93,12 @@ public class CommandLineCrop {
 
 				pageDict.put(PdfName.CROPBOX, scaledBoxArray);
 				pageDict.put(PdfName.MEDIABOX, scaledBoxArray);
+
+				stamper.setOutlines(sourcePdf.getSourceMetaInformation().getSourceBookmarks());
 			}
+			stamper.close();
+			reader.close();
+			System.out.println("Finished cropping via command-line params...");
 		} catch (IOException | DocumentException ex) {
 			System.err.println("I/O or PDF error during command-line cropping; exiting...");
 			System.exit(-1);
