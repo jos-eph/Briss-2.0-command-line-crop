@@ -12,10 +12,12 @@ public class CommandArgumentGenerator {
 	public static String getCommandArguments(String sourceFilePath, Collection<Float> oddRects,
 			Collection<Float> evenRects, Collection<Integer> excludes) {
 
-		String commandLine = "\njava -jar ./build/libs/briss-command-crop.jar -s %s -d /Users/joe/Desktop/testcrop.pdf --odd-rects %s --even-rects %s --exclude-pages %s\n";
+        String excludeString = excludes.isEmpty() ? "" : String.format("--exclude-pages %s", toCliList(excludes));
+
+		String commandLine = "\njava -jar ./build/libs/briss-command-crop.jar -s %s -d /Users/joe/Desktop/testcrop.pdf --odd-rects %s --even-rects %s %s\n";
 
 		return String.format(commandLine, sourceFilePath, toCliList(oddRects), toCliList(evenRects),
-				toCliList(excludes));
+				excludeString);
 
 	}
 }

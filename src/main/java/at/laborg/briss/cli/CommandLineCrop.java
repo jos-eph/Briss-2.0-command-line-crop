@@ -46,11 +46,6 @@ public class CommandLineCrop {
 			copiedSourceWithMetaInfo.setPdfMetaInformation(new PdfMetaInformation(sourceFile, password));
 		} catch (IOException ex) {
 			System.err.println("Error opening source file. Exiting...");
-			System.err.println(ex.getStackTrace());
-			System.err.println(ex.getLocalizedMessage());
-			System.err.println(ex.getMessage());
-			System.err.println(ex.getCause());
-			ex.printStackTrace();
 			System.exit(-1);
 		}
 

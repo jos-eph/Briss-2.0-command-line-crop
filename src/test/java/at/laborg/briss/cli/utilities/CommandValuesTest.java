@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.util.List;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -37,6 +38,14 @@ class CommandValuesTest {
 			assertThrows(IllegalStateException.class, () -> parsedArgs.getOddRects());
 			return;
 		}
+	}
+
+	@Test
+	void testExcludes() {
+		List<Integer> expectedExcludes = List.of(5,6,7);
+		String[] testArgs = {"--rects","1.0,2.0,3.0,4.5", "--exclude-pages", "5,6,7"};
+		CommandValues result = CommandValues.parseToWorkDescription(testArgs);
+		Assertions.assertEquals(expectedExcludes, result.getExcludePages());
 	}
 
 	@Test
