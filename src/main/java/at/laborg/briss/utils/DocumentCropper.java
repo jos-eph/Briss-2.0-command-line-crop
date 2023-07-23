@@ -21,6 +21,8 @@ package at.laborg.briss.utils;
 import at.laborg.briss.exception.CropException;
 import at.laborg.briss.model.CropDefinition;
 import at.laborg.briss.utils.rectcapture.CaptureRectangle;
+import at.laborg.briss.utils.rectcapture.CommandArgumentGenerator;
+import at.laborg.briss.utils.rectcapture.CropEvenOddSimplifier;
 
 import static at.laborg.briss.utils.CreateScaledBoxArray.createScaledBoxArray;
 
@@ -162,14 +164,12 @@ public final class DocumentCropper {
 				int rotation = reader.getPageRotation(newPageNumber);
 
 				Rectangle scaledBox = RectangleHandler.calculateScaledRectangle(boxes, ratios, rotation);
-				System.out.format("Rectangle %s for newPageNumber %s, sourcePageNumber %s calculated\n",
-						RectangleInfo.rectangleToString(scaledBox), newPageNumber, sourcePageNumber);
 				captureRectangle.storePageRectangle(sourcePageNumber, scaledBox);
 
 				PdfArray scaleBoxArray = createScaledBoxArray(scaledBox);
 
-				pageDict.put(PdfName.CROPBOX, scaleBoxArray); // doing the work here
-				pageDict.put(PdfName.MEDIABOX, scaleBoxArray); // doing the work here
+				pageDict.put(PdfName.CROPBOX, scaleBoxArray);
+				pageDict.put(PdfName.MEDIABOX, scaleBoxArray);
 
 				// increment the pagenumber
 				newPageNumber++;
@@ -182,7 +182,14 @@ public final class DocumentCropper {
 		}
 		stamper.setOutlines(pdfMetaInformation.getSourceBookmarks());
 
-		captureRectangle.debugPrintOutMappings();
+		CropEvenOddSimplifier cropEvenOddSimplifier = new CropEvenOddSimplifier(
+				captureRectangle.getUniqueBiggestRects(), captureRectangle.getUniqueBiggestRectsEvennness());
+
+		String commandString = CommandArgumentGenerator.getCommandArguments(
+				cropDefinition.getSourceFile().getAbsolutePath(), cropEvenOddSimplifier.getRectangleForOdds(),
+				cropEvenOddSimplifier.getRectangleForEvens(), cropEvenOddSimplifier.getExcludes());
+
+		System.out.println(commandString);
 
 		stamper.close();
 		reader.close();

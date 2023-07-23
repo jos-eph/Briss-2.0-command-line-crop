@@ -88,9 +88,6 @@ public class CommandLineCrop {
 				pageDict.put(PdfName.CROPBOX, scaledBoxArray);
 				pageDict.put(PdfName.MEDIABOX, scaledBoxArray);
 			}
-
-			// range, bookmarks - look at DocumentCropper
-
 		} catch (IOException | DocumentException ex) {
 			System.err.println("I/O or PDF error during command-line cropping; exiting...");
 			System.exit(-1);
