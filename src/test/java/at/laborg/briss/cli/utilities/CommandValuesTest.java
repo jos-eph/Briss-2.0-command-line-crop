@@ -42,8 +42,8 @@ class CommandValuesTest {
 
 	@Test
 	void testExcludes() {
-		List<Integer> expectedExcludes = List.of(5,6,7);
-		String[] testArgs = {"--rects","1.0,2.0,3.0,4.5", "--exclude-pages", "5,6,7"};
+		List<Integer> expectedExcludes = List.of(5, 6, 7);
+		String[] testArgs = {"--rects", "1.0,2.0,3.0,4.5", "--exclude-pages", "5,6,7"};
 		CommandValues result = CommandValues.parseToWorkDescription(testArgs);
 		Assertions.assertEquals(expectedExcludes, result.getExcludePages());
 	}
