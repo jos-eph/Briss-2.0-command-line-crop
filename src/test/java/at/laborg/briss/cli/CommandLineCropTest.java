@@ -52,18 +52,14 @@ class CommandLineCropTest {
 			Set<Integer> expectedExcludes = Set.of(3, 12);
 
 			IntStream.rangeClosed(1, NUMBER_OF_PAGES_IN_TEST).forEach((pageNumber) -> {
-				System.out.format("Page: %s\n", pageNumber);
 				PdfDictionary pageDictionary = reader.getPageN(pageNumber);
 				PdfArray mediaBox = (PdfArray) pageDictionary.get(PdfName.MEDIABOX);
 
 				List<BigDecimal> mediaBoxList = PdfArrayNumbersToListBigDecimal.getBigDecimalList(mediaBox);
 
-				System.out.format("Mediabox is %s\n", mediaBoxList);
-
 				List<Float> expectedForOddOrEven = pageNumber % 2 == 0
 						? expectedEvenCoordinates
 						: expectedOddCoordinates;
-				System.out.format("expectedForOddOrEven: %s\n", expectedForOddOrEven);
 				Boolean matchesForOddOrEven = CompareNumericLists.numberListsEqual(mediaBoxList, expectedForOddOrEven,
 						PERMITTED_ERROR);
 
