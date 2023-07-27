@@ -21,6 +21,10 @@ package at.laborg.briss.utils;
 import at.laborg.briss.exception.CropException;
 import at.laborg.briss.model.CropDefinition;
 import at.laborg.briss.utils.rectcapture.CaptureRectangle;
+import at.laborg.briss.utils.rectcapture.CommandArgumentGenerator;
+import at.laborg.briss.utils.rectcapture.CropEvenOddSimplifier;
+
+import static at.laborg.briss.utils.CreateScaledBoxArray.createScaledBoxArray;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -107,7 +111,6 @@ public final class DocumentCropper {
 
 			pdfCopy.addPage(pdfPage);
 			outputPageNumber++;
-			System.out.format("pageNumber %s, outputPageNumber %s in outermost loop\n", pageNumber, outputPageNumber);
 			List<String> destinations = pageNrToDestinations.get(pageNumber);
 			if (destinations != null) {
 				for (String destination : destinations)
@@ -134,7 +137,7 @@ public final class DocumentCropper {
 		PdfReader reader = PDFReaderUtil.getPdfReader(multipliedDocument.getAbsolutePath(), password);
 
 		PdfStamper stamper = new PdfStamper(reader, new FileOutputStream(cropDefinition.getDestinationFile()));
-		stamper.setMoreInfo(pdfMetaInformation.getSourceMetaInfo());
+		stamper.setMoreInfo(pdfMetaInformation.getSourceMetaInfoMap());
 
 		PdfDictionary pageDict;
 		int newPageNumber = 1;
@@ -161,14 +164,12 @@ public final class DocumentCropper {
 				int rotation = reader.getPageRotation(newPageNumber);
 
 				Rectangle scaledBox = RectangleHandler.calculateScaledRectangle(boxes, ratios, rotation);
-				System.out.format("Rectangle %s for newPageNumber %s, sourcePageNumber %s calculated\n",
-						RectangleInfo.rectangleToString(scaledBox), newPageNumber, sourcePageNumber);
 				captureRectangle.storePageRectangle(sourcePageNumber, scaledBox);
 
 				PdfArray scaleBoxArray = createScaledBoxArray(scaledBox);
 
-				pageDict.put(PdfName.CROPBOX, scaleBoxArray); // doing the work here
-				pageDict.put(PdfName.MEDIABOX, scaleBoxArray); // doing the work here
+				pageDict.put(PdfName.CROPBOX, scaleBoxArray);
+				pageDict.put(PdfName.MEDIABOX, scaleBoxArray);
 
 				// increment the pagenumber
 				newPageNumber++;
@@ -181,45 +182,16 @@ public final class DocumentCropper {
 		}
 		stamper.setOutlines(pdfMetaInformation.getSourceBookmarks());
 
-		captureRectangle.debugPrintOutMappings();
+		CropEvenOddSimplifier cropEvenOddSimplifier = new CropEvenOddSimplifier(
+				captureRectangle.getUniqueBiggestRects(), captureRectangle.getUniqueBiggestRectsEvennness());
+
+		String commandString = CommandArgumentGenerator.getCommandArguments(
+				cropDefinition.getSourceFile().getAbsolutePath(), cropEvenOddSimplifier.getRectangleForOdds(),
+				cropEvenOddSimplifier.getRectangleForEvens(), cropEvenOddSimplifier.getExcludes());
+
+		System.out.println(commandString);
 
 		stamper.close();
 		reader.close();
-	}
-
-	private static PdfArray createScaledBoxArray(final Rectangle scaledBox) {
-		PdfArray scaleBoxArray = new PdfArray();
-		scaleBoxArray.add(new PdfNumber(scaledBox.getLeft()));
-		scaleBoxArray.add(new PdfNumber(scaledBox.getBottom()));
-		scaleBoxArray.add(new PdfNumber(scaledBox.getRight()));
-		scaleBoxArray.add(new PdfNumber(scaledBox.getTop()));
-		return scaleBoxArray;
-	}
-
-	private static class PdfMetaInformation {
-
-		private final int sourcePageCount;
-		private final HashMap<String, String> sourceMetaInfo;
-		private final List<HashMap<String, Object>> sourceBookmarks;
-
-		public PdfMetaInformation(final File source, String password) throws IOException {
-			PdfReader reader = PDFReaderUtil.getPdfReader(source.getAbsolutePath(), password);
-			this.sourcePageCount = reader.getNumberOfPages();
-			this.sourceMetaInfo = reader.getInfo();
-			this.sourceBookmarks = SimpleBookmark.getBookmark(reader);
-			reader.close();
-		}
-
-		public int getSourcePageCount() {
-			return sourcePageCount;
-		}
-
-		public HashMap<String, String> getSourceMetaInfo() {
-			return sourceMetaInfo;
-		}
-
-		public List<HashMap<String, Object>> getSourceBookmarks() {
-			return sourceBookmarks;
-		}
 	}
 }

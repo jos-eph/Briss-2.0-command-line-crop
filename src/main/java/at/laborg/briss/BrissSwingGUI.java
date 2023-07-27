@@ -739,7 +739,6 @@ public class BrissSwingGUI implements BrissGUIApp {
 				e1.printStackTrace();
 				return null;
 			}
-			// trap Rectangles here
 
 			int totalWorkUnits = clusterDefinition.getNrOfPagesToRender();
 

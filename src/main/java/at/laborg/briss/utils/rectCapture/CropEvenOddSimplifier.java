@@ -57,7 +57,6 @@ public class CropEvenOddSimplifier {
 				.entrySet()) {
 			List<Float> largestRectangle = largestRectangleAndPages.getKey();
 			Collection<Integer> pages = largestRectangleAndPages.getValue();
-			System.out.format("Pages: %s", pages);
 			Collection<PageEvenOddEnum> evenness = uniqueBiggestRectsEvennness.get(largestRectangle);
 
 			if (evenness.size() == 2) {
