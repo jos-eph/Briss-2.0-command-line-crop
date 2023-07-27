@@ -14,7 +14,8 @@ public class CommandArgumentGenerator {
 
 		String excludeString = excludes.isEmpty() ? "" : String.format("--exclude-pages %s", toCliList(excludes));
 
-		String commandLine = "\njava -jar ./build/libs/briss-command-crop.jar -s %s -d /Users/joe/Desktop/testcrop.pdf --odd-rects %s --even-rects %s %s\n";
+		System.out.println("\t\t\t\\/ Run a command similar to the below to approximate this crop: \n\t\t\\/\n\t\\/\n\n");
+		String commandLine = "\njava -jar ./build/libs/briss-command-crop.jar -s %s -d $HOME/Desktop/testcrop.pdf --odd-rects %s --even-rects %s %s\n";
 
 		return String.format(commandLine, sourceFilePath, toCliList(oddRects), toCliList(evenRects), excludeString);
 
